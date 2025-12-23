@@ -79,7 +79,15 @@ RamayanGPT/
 
 ---
 
-## 🎯 Usage Examples
+## Screenshots
+<img width="1919" height="915" alt="image" src="https://github.com/user-attachments/assets/6968d424-5c29-4c92-9dd5-b8834b5f6fde" />
+<img width="1910" height="914" alt="image" src="https://github.com/user-attachments/assets/9dc16041-3ed5-44ec-bb81-7d5da6bfdeae" />
+<img width="1910" height="905" alt="image" src="https://github.com/user-attachments/assets/3e4d3021-5ccc-45a0-b902-82d4bfa09cea" />
+<img width="1906" height="914" alt="image" src="https://github.com/user-attachments/assets/89fd5e39-1904-432e-90c4-25a2d9db0ad2" />
+
+
+
+
 
 ### **Web Interface**
 1. Run `python start_ramayan_gpt.py`
