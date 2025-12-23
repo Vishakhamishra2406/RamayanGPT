@@ -1,0 +1,103 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>🕉️ RamayanGPT - AI Powered Spiritual Guide</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;700;800&display=swap" rel="stylesheet"><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"><style>:root {--primary-orange: #ff6b35;--primary-orange-light: #ffb703;--bg-gradient: linear-gradient(135deg, #ff8c5a, #ffe5d9);--card-bg: rgba(255, 255, 255, 0.97);--text-primary: #1f2937;--text-secondary: #6b7280;--border-color: #e5e7eb;--shadow-xl: 0 25px 50px rgba(255, 107, 53, 0.25);}* {margin: 0;padding: 0;box-sizing: border-box;}body {font-family: 'Inter', sans-serif;background: var(--bg-gradient);min-height: 100vh;display: flex;justify-content: center;align-items: center;padding: 20px;}.container {width: 100%;max-width: 1000px;height: 88vh;display: flex;flex-direction: column;}/* ================= HEADER ================= */.header {display: flex;align-items: center;gap: 24px;padding: 30px;background: linear-gradient(135deg, #fff7ed, #ffffff);border-radius: 30px 30px 0 0;box-shadow: var(--shadow-xl);border-bottom: 2px solid rgba(255, 107, 53, 0.2);}.logo img {height: 90px;border-radius: 14px;box-shadow: 0 10px 25px rgba(255, 107, 53, 0.35);}.header-content {flex: 1;}.main-title {font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;font-size: 3.4rem;font-weight: 800;letter-spacing: 1px;background: linear-gradient(135deg, #ff6b35, #ffb703, #ff8c5a);-webkit-background-clip: text;-webkit-text-fill-color: transparent;text-shadow: 0 6px 25px rgba(255, 107, 53, 0.35);}.subtitle {font-size: 1.35rem;font-weight: 600;color: #374151;margin-top: 4px;}.tagline {font-size: 1rem;color: var(--text-secondary);font-style: italic;margin-top: 4px;}/* ================= CHAT ================= */.chat-section {flex: 1;background: var(--card-bg);border-radius: 0 0 30px 30px;box-shadow: var(--shadow-xl);display: flex;flex-direction: column;overflow: hidden;}.chat-messages {flex: 1;padding: 26px;overflow-y: auto;}.message {margin-bottom: 20px;}.message.user {text-align: right;}.message-content {display: inline-block;max-width: 80%;padding: 16px 22px;border-radius: 22px;line-height: 1.6;font-size: 0.95rem;}.user .message-content {background: linear-gradient(135deg, #ff6b35, #ff8c5a);color: #fff;border-bottom-right-radius: 8px;}.assistant .message-content {background: #fff;border: 1px solid var(--border-color);border-bottom-left-radius: 8px;}.welcome-message {text-align: center;margin-top: 50px;color: var(--text-secondary);}.welcome-icon {font-size: 3rem;margin-bottom: 16px;color: var(--primary-orange);}/* ================= INPUT ================= */.input-container {padding: 24px;border-top: 1px solid var(--border-color);background: #f9fafb;}.status-indicator {display: flex;align-items: center;gap: 8px;font-size: 0.85rem;margin-bottom: 12px;}.status-dot {width: 8px;height: 8px;border-radius: 50%;background: #10b981;}.input-wrapper {display: flex;gap: 10px;}.message-input {flex: 1;padding: 16px 20px;border-radius: 25px;border: 2px solid var(--border-color);font-size: 1rem;}.action-btn {width: 50px;height: 50px;border-radius: 50%;border: none;cursor: pointer;background: linear-gradient(135deg, #ff6b35, #ff8c5a);color: #fff;font-size: 1.2rem;}/* ================= MOBILE ================= */@media (max-width: 768px) {.main-title { font-size: 2.3rem; }.subtitle { font-size: 1.1rem; }.logo img { height: 60px; }}</style></head><body><div class="container"><!-- HEADER --><div class="header"><div class="logo"><img src="Gemini_Generated_Image_k7j7n8k7j7n8k7j7.png" /></div><div class="header-content"><h1 class="main-title">RamayanGPT</h1><p class="subtitle">🕉️ AI-Powered Spiritual Guide</p><p class="tagline">Wisdom of Ramayana • Dharma • Bhakti • Life Guidance</p></div></div><!-- CHAT --><div class="chat-section"><div class="chat-messages" id="chatMessages"><div class="welcome-message"><div class="welcome-icon">🙏</div><h3>Welcome to RamayanGPT</h3><p>Ask anything about Ramayana, Dharma & Spiritual wisdom.</p></div></div><!-- INPUT --><div class="input-container"><div class="status-indicator"><div class="status-dot" id="statusDot"></div><span id="statusText">Connected to RamayanGPT</span></div><div class="input-wrapper"><input class="message-input" id="messageInput" placeholder="Ask about Ramayana... (राम का जन्म कैसे हुआ?)" onkeypress="handleKeyPress(event)"><button class="action-btn" id="sendBtn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button></div></div></div></div>
+
+<script>
+const API_BASE = 'http://localhost:8001';
+let isConnected = false;
+
+// Check server connection
+async function checkConnection() {
+    try {
+        const response = await fetch(`${API_BASE}/health-bilingual`);
+        if (response.ok) {
+            setConnectionStatus(true, 'Connected to RamayanGPT');
+        } else {
+            setConnectionStatus(false, 'Server error');
+        }
+    } catch (error) {
+        setConnectionStatus(false, 'Disconnected - Please start server');
+    }
+}
+
+function setConnectionStatus(connected, message) {
+    isConnected = connected;
+    const statusDot = document.getElementById('statusDot');
+    const statusText = document.getElementById('statusText');
+    
+    statusDot.style.background = connected ? '#10b981' : '#ef4444';
+    statusText.textContent = message;
+}
+
+function addMessage(content, isUser = false) {
+    const messagesContainer = document.getElementById('chatMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${isUser ? 'user' : 'assistant'}`;
+    
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'message-content';
+    contentDiv.textContent = content;
+    
+    messageDiv.appendChild(contentDiv);
+    messagesContainer.appendChild(messageDiv);
+    
+    // Scroll to bottom
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+async function sendMessage() {
+    const input = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const question = input.value.trim();
+    
+    if (!question || !isConnected) return;
+    
+    // Disable input
+    input.disabled = true;
+    sendBtn.disabled = true;
+    
+    // Add user message
+    addMessage(question, true);
+    input.value = '';
+    
+    try {
+        const response = await fetch(`${API_BASE}/ask-bilingual`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                question: question,
+                preferred_language: 'auto'
+            })
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            addMessage(data.answer || 'Sorry, I could not understand your question.');
+        } else {
+            addMessage('Sorry, there was an error processing your request.');
+        }
+    } catch (error) {
+        addMessage('Connection error. Please check if the server is running.');
+        setConnectionStatus(false, 'Connection error');
+    }
+    
+    // Re-enable input
+    input.disabled = false;
+    sendBtn.disabled = false;
+    input.focus();
+}
+
+function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    checkConnection();
+    setInterval(checkConnection, 10000); // Check every 10 seconds
+    document.getElementById('messageInput').focus();
+});
+</script>
+</body></html>
